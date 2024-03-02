@@ -1,6 +1,14 @@
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+-- General
+vim.keymap.set('n', '<leader>ww', ':w<CR>', { desc = 'Save current file' }) -- save
+vim.keymap.set('n', '<leader>wq', ':wq<CR>', { desc = 'Save current file and quit nvim' }) -- save and quit
+vim.keymap.set('n', '<leader>qq', ':q!<CR>', { desc = 'Quit without saving' }) -- quit without saving
+vim.keymap.set('n', '<leader>bn', ':bnext<CR>', { desc = 'Buffer Next' })
+vim.keymap.set('n', '<leader>bp', ':bprevious<CR>', { desc = 'Buffer Previous' })
+vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Buffer Delete' })
+
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -20,10 +28,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -47,5 +55,28 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+-- Trouble
+vim.keymap.set('n', '<leader>xx', function()
+  require('trouble').toggle()
+end, { desc = 'Trouble Toggle' })
+vim.keymap.set('n', '<leader>xw', function()
+  require('trouble').toggle 'workspace_diagnostics'
+end, { desc = 'Trouble Worspace Diagnostics' })
+vim.keymap.set('n', '<leader>xd', function()
+  require('trouble').toggle 'document_diagnostics'
+end, { desc = 'Trouble Document Diagnostics' })
+vim.keymap.set('n', '<leader>xq', function()
+  require('trouble').toggle 'quickfix'
+end, { desc = 'Trouble QuickFix' })
+vim.keymap.set('n', '<leader>xl', function()
+  require('trouble').toggle 'loclist'
+end, { desc = 'Trouble LocList' })
+vim.keymap.set('n', 'gR', function()
+  require('trouble').toggle 'lsp_references'
+end, { desc = 'Trouble LSP References' })
+
+-- LazyGit
+vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'Lazy Git' })
 
 -- vim: ts=2 sts=2 sw=2 et
