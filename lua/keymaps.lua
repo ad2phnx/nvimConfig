@@ -9,6 +9,9 @@ vim.keymap.set('n', '<leader>bn', ':bnext<CR>', { desc = 'Buffer Next' })
 vim.keymap.set('n', '<leader>bp', ':bprevious<CR>', { desc = 'Buffer Previous' })
 vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Buffer Delete' })
 
+-- Shortcuts
+vim.keymap.set('i', '<C-F>', '<Esc>gUiw`]a', { desc = 'Uppercase typed word' })
+
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -78,5 +81,11 @@ end, { desc = 'Trouble LSP References' })
 
 -- LazyGit
 vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'Lazy Git' })
+
+-- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- vim: ts=2 sts=2 sw=2 et

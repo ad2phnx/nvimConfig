@@ -61,6 +61,7 @@ vim.opt.scrolloff = 10
 -- Editor options
 vim.opt.syntax = 'on' -- Turn on syntax highlighting
 vim.opt.autoindent = true -- Copy indent from current line for next new line
+vim.opt.smartindent = true
 vim.opt.expandtab = true -- In insert mode space out the tab
 vim.opt.shiftwidth = 4 -- Number of spaces for each step of (auto)indent
 vim.opt.tabstop = 4 -- Number of spaces a <Tab> is
@@ -74,13 +75,29 @@ vim.opt.wildmenu = true -- Command-line completion operatis in an enhanced mode
 vim.opt.showcmd = true -- Show (partial) command in last line of screen.
 vim.opt.showmatch = true -- When bracket insert, briefly jump to matching one
 vim.opt.termguicolors = true
+vim.opt.hlsearch = true
 
-vim.opt.shell = vim.fn.executable 'pwsh' and 'pwsh' or 'powershell'
-vim.opt.shellcmdflag =
-  '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
-vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
-vim.opt.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-vim.opt.shellquote = ''
-vim.opt.shellxquote = ''
+-- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+if vim.fn.has 'win32' == 1 then
+  vim.opt.shell = vim.fn.executable 'pwsh' and 'pwsh' or 'powershell'
+  vim.opt.shellcmdflag =
+    '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+  vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
+  vim.opt.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+  vim.opt.shellquote = ''
+  vim.opt.shellxquote = ''
+elseif vim.fn.has 'mac' == 1 or vim.fn.has 'unix' == 1 then
+  vim.opt.shell = '/bin/bash'
+  vim.opt.shellcmdflag = '-c'
+  vim.opt.shellredir = ''
+  vim.opt.shellpipe = '2>&1 | tee %s >/dev/null; exit ${PIPESTATUS[0]}'
+  vim.opt.shellquote = '\\'
+  vim.opt.shellxquote = ''
+end
 
 -- vim: ts=2 sts=2 sw=2 et
