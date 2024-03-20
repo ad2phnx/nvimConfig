@@ -6,6 +6,7 @@ return {
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      'folke/neoconf.nvim',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -132,7 +133,100 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {
+          keys = {
+            { '<leader>cR', '<cmd>ClangdSwitchSourceHeader<cr>', desc = 'Switch Source/Header (C/C++)' },
+          },
+          root_dir = function(fname)
+            return require('lspconfig.util').root_pattern(
+              'Makefile',
+              'configure.ac',
+              'configure.in',
+              'config.h.in',
+              'meson.build',
+              'meson_options.txt',
+              'build.ninja'
+            )(fname) or require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt')(fname) or require('lspconfig.util').find_git_ancestor(
+              fname
+            )
+          end,
+          capabilties = {
+            offsetEncoding = { 'utf-16' },
+          },
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--header-insertion=iwyu',
+            '--completion-style=detailed',
+            '--function-arg-placeholders',
+            '--fallback-style=llvm',
+          },
+          init_options = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            clangdFileStatus = true,
+          },
+        },
+        require('neoconf').setup {},
+        jdtls = {
+          java = {
+            settings = {
+              configuration = {
+                runtimes = {
+                  {
+                    name = 'JavaSE-17',
+                    path = '/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/',
+                  },
+                  {
+                    name = 'JavaSE-11',
+                    path = '/Library/Java/JavaVirtualMachines/jdk-11.jdk/Contents/Home/',
+                  },
+                  {
+                    name = 'JavaSE-1.8',
+                    path = '/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/',
+                  },
+                },
+              },
+            },
+          },
+        },
+        -- jdtls = {
+        --   cmd = {
+        --     'java',
+        --     '-javaagent:/Users/anatoliy.a.dinis/.local/share/nvim/mason/share/jdtls/lombok.jar',
+        --     '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+        --     '-Dosgi.bundles.defaultStartLevel=4',
+        --     '-Dlog.protocol=true',
+        --     '-Dlog.level=ALL',
+        --     -- '-noverify',
+        --     '-Xms1g',
+        --     --'--add-modules=ALL-SYSTEM',
+        --     --'--add-opens',
+        --     --'java.base/java.util=ALL-UNNAMED',
+        --     --'--add-opens',
+        --     --'java.base/java.lang=ALL-UNNAMED',
+        --     '-jar',
+        --     vim.fn.glob '/Users/anatoliy.a.dinis/.local/share/nvim/mason/share/jdtls/plugins/org.eclipse.equinox.launcher_*.jar',
+        --     '-configuration',
+        --     '/Users/anatoliy.a.dinis/.local/share/nvim/mason/packages/jdtls/config_mac',
+        --     '-data',
+        --     '/Users/anatoliy.a.dinis/.workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t'),
+        --   },
+        --   root_dir = require('jdtls.setup').find_root { '.git', 'mvnw', 'gradlew' },
+        --   settings = {
+        --     java = {},
+        --   },
+        --   handlers = {
+        --     ['language/status'] = function(_, result)
+        --       -- print(result)
+        --     end,
+        --     ['$/progress'] = function(_, result, ctx)
+        --       -- disable progress updates.
+        --     end,
+        --   },
+        -- },
+
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -169,25 +263,33 @@ return {
           },
         },
       }
-
-      -- Ensure the servers and tools above are installed
-      --  To check the current status of installed tools and/or manually install
-      --  other tools, you can run
-      --    :Mason
-      --
-      --  You can press `g?` for help in this menu
-      require('mason').setup()
+      bashls =
+        {},
+        -- Ensure the servers and tools above are installed
+        --  To check the current status of installed tools and/or manually install
+        --  other tools, you can run
+        --    :Mason
+        --
+        --  You can press `g?` for help in this menu
+        require('mason').setup()
+      require('java').setup()
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format lua code
+        'bashls',
         'lua_ls',
         'groovyls',
         'marksman',
         'quick_lint_js',
         'hls',
+        'java-test',
+        'java-debug-adapter',
+        'cmakelang',
+        'cmakelint',
+        -- 'jdtls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
