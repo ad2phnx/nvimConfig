@@ -59,6 +59,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Define an autocmd group named "set_jenkins_groovy"
+vim.cmd [[augroup set_jenkins_groovy]]
+vim.cmd [[au!]]
+
+-- Attach autocmd for BufNewFile, BufRead events on specific file patterns
+vim.cmd [[au BufNewFile,BufRead *.jenkinsfile,*.Jenkinsfile,Jenkinsfile,jenkinsfile setf groovy]]
+
+-- End the autocmd group
+vim.cmd [[augroup END]]
+
 -- Trouble
 vim.keymap.set('n', '<leader>xx', function()
   require('trouble').toggle()
@@ -79,13 +89,16 @@ vim.keymap.set('n', 'gR', function()
   require('trouble').toggle 'lsp_references'
 end, { desc = 'Trouble LSP References' })
 
+-- Todo Comments
+vim.keymap.set('n', ']t', function()
+  require('todo-comments').jump_next()
+end, { desc = 'Next todo comment' })
+
+vim.keymap.set('n', '[t', function()
+  require('todo-comments').jump_prev()
+end, { desc = 'Previous todo comment' })
+
 -- LazyGit
 vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'Lazy Git' })
-
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- vim: ts=2 sts=2 sw=2 et

@@ -77,12 +77,6 @@ vim.opt.showmatch = true -- When bracket insert, briefly jump to matching one
 vim.opt.termguicolors = true
 vim.opt.hlsearch = true
 
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-
 if vim.fn.has 'win32' == 1 then
   vim.opt.shell = vim.fn.executable 'pwsh' and 'pwsh' or 'powershell'
   vim.opt.shellcmdflag =
@@ -92,7 +86,7 @@ if vim.fn.has 'win32' == 1 then
   vim.opt.shellquote = ''
   vim.opt.shellxquote = ''
 elseif vim.fn.has 'mac' == 1 or vim.fn.has 'unix' == 1 then
-  vim.opt.shell = '/bin/bash'
+  vim.opt.shell = '/bin/zsh'
   vim.opt.shellcmdflag = '-c'
   vim.opt.shellredir = ''
   vim.opt.shellpipe = '2>&1 | tee %s >/dev/null; exit ${PIPESTATUS[0]}'
