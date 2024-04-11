@@ -7,6 +7,7 @@ return {
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       'folke/neoconf.nvim',
+      'pwntester/nvim-lsp',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -132,6 +133,7 @@ return {
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local nvim_lsp = require 'nvim_lsp'
       local servers = {
         clangd = {
           keys = {
@@ -262,16 +264,31 @@ return {
             },
           },
         },
+        bashls = {},
+
+        solargraph = {
+          cmd = { os.getenv 'HOME' .. '/.anyenv/envs/rbenv/shims/solargraph', 'stdio' },
+          root_dir = nvim_lsp.util.root_pattern('Gemfile', '.git', '.'),
+          settings = {
+            solargraph = {
+              autoformat = true,
+              completion = true,
+              diagnostic = true,
+              folding = true,
+              references = true,
+              rename = true,
+              symbols = true,
+            },
+          },
+        },
       }
-      bashls =
-        {},
-        -- Ensure the servers and tools above are installed
-        --  To check the current status of installed tools and/or manually install
-        --  other tools, you can run
-        --    :Mason
-        --
-        --  You can press `g?` for help in this menu
-        require('mason').setup()
+      -- Ensure the servers and tools above are installed
+      --  To check the current status of installed tools and/or manually install
+      --  other tools, you can run
+      --    :Mason
+      --
+      --  You can press `g?` for help in this menu
+      require('mason').setup()
       require('java').setup()
 
       -- You can add other tools here that you want Mason to install
@@ -284,12 +301,13 @@ return {
         'groovyls',
         'marksman',
         'quick_lint_js',
-        'hls',
+        'haskell-language-server',
         'java-test',
         'java-debug-adapter',
         'cmakelang',
         'cmakelint',
         -- 'jdtls',
+        'solargraph',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
