@@ -295,19 +295,19 @@ return {
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format lua code
-        'bashls',
-        'lua_ls',
-        'groovyls',
-        'marksman',
-        'quick_lint_js',
-        'haskell-language-server',
+        --'stylua', -- Used to format lua code
+        --'bashls',
+        --'lua_ls',
+        --'groovyls',
+        --'marksman',
+        --'quick_lint_js',
+        --'haskell-language-server',
         'java-test',
         'java-debug-adapter',
         'cmakelang',
         'cmakelint',
         -- 'jdtls',
-        'solargraph',
+        --'solargraph',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -330,4 +330,5 @@ return {
     end,
   },
 }
+
 -- vim: ts=2 sts=2 sw=2 et
